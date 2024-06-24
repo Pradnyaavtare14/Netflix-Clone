@@ -1,0 +1,39 @@
+import re
+
+def lexical_analyzer(code):
+
+    patterns = [
+        ('NUMBER', r'\b\d+(\.\d+)?\b'), 
+        ('INT', r'\b\d+\b'),
+        ('FLOAT', r'\b\d+\.\d+\b'),
+        ('IDENTIFIER', r'\b[a-zA-Z_][a-zA-Z0-9_]*\b'),
+        ('OPERATOR', r'\+|\-|\*|\/'),
+        ('PARENTHESIS', r'\(|\)'),
+        ('ASSIGNMENT', r'='),
+        ('SEMICOLON', r';'),
+    ]
+
+    lexemes_tokens = []
+
+    for line_number, line in enumerate(code.split('\n'), start=1):
+        for pattern_name, pattern in patterns:
+            regex = re.compile(pattern)
+            matches = regex.finditer(line)
+            for match in matches:
+                lexeme = match.group(0)
+                token = pattern_name
+                lexemes_tokens.append((lexeme, token))
+
+    return lexemes_tokens
+
+
+file_path = 'input_code.txt'
+with open(file_path, 'r') as file:
+    code = file.read()
+
+result = lexical_analyzer(code)
+
+print("Lexeme\t\tToken")
+
+for lexeme, token in result:
+    print(f"{lexeme}\t\t{token}")
